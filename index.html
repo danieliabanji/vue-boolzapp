@@ -113,10 +113,22 @@
                     <!-- CHAT AREA -->
                     <div class="chat-area">
                         <div class="chat-area-container">
-                            <div class="single-message" v-for="message in contacts[currentChat].messages" :key="message.id" :class="{'sent' : message.status === 'sent', 'received' : message.status === 'received'}">
+                            <div class="single-message d-flex justify-content-between" v-for="(message, i) in contacts[currentChat].messages" :key="i" :class="{'sent' : message.status === 'sent', 'received' : message.status === 'received'}">
                                 <p>{{message.message}}</p>
                                 
-                                <span>{{message.date}}</span>
+                                <div class="d-flex flex-column justify-content-between">
+                                    <div class="d-flex justify-content-center align-items-center p-1 position-relative">
+                                        <i class="fas fa-chevron-down c-pointer" @click="toggleClass(i)"></i>
+
+                                        <div class="drop-menu position-absolute shadow border p-2" :class="{'d-none': !message.options}" @mouseleave="toggleClass(i)">
+                                                        
+                                            <p class="my-0 hover_bg p-1 c-pointer">Message info</p>
+                                            <p class="my-0 hover_bg p-1 c-pointer" @click="deleteMessage(i)">Delete message</p>
+                                        </div>
+                                    </div>
+
+                                    <span>{{message.date}}</span>
+                                </div>
                             </div>
                             
                         </div>
