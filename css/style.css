@@ -185,6 +185,9 @@ a {
     border: 1px solid #eaeaea;
     cursor: pointer;
 }
+.single-user-chat:hover{
+    background-color: #eaeaea7c;
+}
 
 .single-user-chat-image {
     width: 40px;
@@ -195,7 +198,6 @@ a {
 
 .single-user-chat-name {
    padding-left: 10px;
-
    display: flex;
    flex-direction: column;
    width: 100%;
@@ -207,12 +209,12 @@ a {
     justify-content: space-between;
 }
 
-.single-user-chat-name .name {
+.name {
     font-weight: 500;
     font-size: 14px;
 }
 
-.single-user-chat-name .mex {
+.mex {
     width: 100px;
     white-space: nowrap;
     overflow: hidden;
@@ -223,7 +225,7 @@ a {
     margin-top: 7px;
 }
 
-.single-user-chat-name .time {
+.time {
     font-size: 10px;
     color: gray;
 }
@@ -286,24 +288,23 @@ a {
 
 /* INVIO MESSAGGIO */
 
-
-
 .message-icon {
     width: 35px;
     text-align: center;
     font-size: 20px;
 }
 
-.message-icon a i{
+.smile, .mic, .arrow{
     color: #899091;
+}
+
+.arrow:hover, .smile:hover{
+    cursor: pointer;
+    color: #009688;
 }
 
 .mic:hover{
     color: red;
-    transition: 1s;
-}
-.smile:hover{
-    color: green;
     transition: 1s;
 }
 
@@ -315,7 +316,6 @@ a {
     padding: 10px;
     color: #b1b1b1;
 }
-
 
 .sent {
     align-self: flex-end;

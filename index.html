@@ -29,7 +29,7 @@
                                 <img src="img/avatar_3.jpg" alt="my_avatar">
                             </div>
                             <div class="user-name">
-                                Daniel Iabanji
+                                Daniel
                             </div>
                         </div>
 
@@ -62,21 +62,21 @@
                     <!-- RICERCA CONTATTI -->
                     <div class="search-contact">
                         <i class="fas fa-search"></i>
-                        <input type="search" placeholder="Cerca o inizia una nuova chat">
+                        <input v-model.trim="searchTerm" type="search" placeholder="Cerca o inizia una nuova chat">
                     </div>
 
                     <!-- LISTA CONTATTI -->
                     <div class="contact-list">
-                        <div class="single-user-chat" >
+                        <div @click="currentActive(contact.id)"  v-for="(contact, index) in filteredConatact" :key="contact.id" class="single-user-chat" :class="{'active' : index === currentChat}">
                             <div class="single-user-chat-image">
-                                <img src="./img/avatar_1.jpg" alt="">
+                                <img :src="'./img/avatar' + contact.avatar + '.jpg'" :alt="contact.name">
                             </div>
                             <div class="single-user-chat-name">
                                 <div class="title-text-contact">
-                                    <span class="name">Michele</span>
-                                    <span class="time">10/01/2020 16:15:22</span>
+                                    <span class="name">{{contact.name}}</span>
+                                    <span class="time">{{getLastMessage(contact).date}}</span>
                                 </div>
-                                <div class="mex">Tutto fatto!</div>
+                                <div class="mex">{{getLastMessage(contact).message}}</div>
                             </div>
                         </div>
                     </div>
@@ -87,11 +87,11 @@
                     <div class="d-flex align-items-center bg-lightgrey">
                         <div class="user-image-name">
                             <div class="user-image">
-                                <img src="./img/avatar_1.jpg" alt="">
+                                <img :src="'img/avatar' + contacts[currentChat].avatar + '.jpg'" :alt="contacts[currentChat].name">
                             </div>
                             <div class="user-name">
-                                Michele
-                                <p>Ultimo accesso 10/01/2020 16:15:22</p>
+                                {{contacts[currentChat].name}}
+                                <p>Ultimo accesso {{getLastMessage(contacts[currentChat]).date}}</p>
                             </div>
                         </div>
 
@@ -113,21 +113,12 @@
                     <!-- CHAT AREA -->
                     <div class="chat-area">
                         <div class="chat-area-container">
-                            <div class="single-message sent" >
-                                <p>Hai portato a spasso il cane?</p>
-
-                                <span>10/01/2020 15:30:55</span>
+                            <div class="single-message" v-for="message in contacts[currentChat].messages" :key="message.id" :class="{'sent' : message.status === 'sent', 'received' : message.status === 'received'}">
+                                <p>{{message.message}}</p>
+                                
+                                <span>{{message.date}}</span>
                             </div>
-                            <div class="single-message sent" >
-                                <p>Ricordati di stendere i panni</p>
-
-                                <span>10/01/2020 15:50:00</span>
-                            </div>
-                            <div class="single-message received" >
-                                <p>tutto fatto</p>
-
-                                <span>10/01/2020 16:15:22</span>
-                            </div>
+                            
                         </div>
                     </div>
 
@@ -137,10 +128,13 @@
                             <a href="#"><i class="far fa-smile smile"></i></a>
                         </div>
                         <div class="flex-grow-1">
-                            <input type="text" placeholder="Scrivi un messaggio" class="message-text">
+                            <input v-model="newMessage" @keyup.enter="messageSent" type="text" placeholder="Scrivi un messaggio" class="message-text">
                         </div>
                         <div class="message-icon">
                             <a href="#"><i class="fas fa-microphone mic"></i></a>
+                        </div>
+                        <div class="message-icon pb-1">
+                            <svg @click="messageSent" viewBox="0 0 24 24" height="24" width="24" preserveAspectRatio="xMidYMid meet" class="arrow" version="1.1" x="0px" y="0px" enable-background="new 0 0 24 24" xml:space="preserve"><path fill="currentColor" d="M1.101,21.757L23.8,12.028L1.101,2.3l0.011,7.912l13.623,1.816L1.112,13.845 L1.101,21.757z"></path></svg>
                         </div>
                     </div>
 
