@@ -306,11 +306,24 @@ a {
     text-align: center;
     font-size: 20px;
 }
-
+.emojis{
+    border-radius: 50%;
+}
 .smile, .mic, .arrow{
+    cursor: pointer;
     color: #899091;
 }
-
+#emoji{
+    background-color: #fff;
+    position: absolute;
+    bottom: 43px;
+    z-index: 999;
+    min-width: 350px;
+    border: 1px solid #b1b1b1;
+    border-radius: 10px;
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+    padding: 10px;
+}
 .arrow:hover, .smile:hover{
     cursor: pointer;
     color: #009688;

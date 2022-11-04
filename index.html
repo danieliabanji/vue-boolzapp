@@ -67,16 +67,20 @@
 
                     <!-- LISTA CONTATTI -->
                     <div class="contact-list">
-                        <div @click="currentActive(contact.id)"  v-for="(contact, index) in filteredConatact" :key="contact.id" class="single-user-chat" :class="{'active' : index === currentChat}">
+                        <div @click="currentActive(contact.id)" v-for="(contact, id) in filteredConatact"
+                            :key="contact.id" class="single-user-chat" :class="{'active' : id === currentChat}">
                             <div class="single-user-chat-image">
                                 <img :src="'./img/avatar' + contact.avatar + '.jpg'" :alt="contact.name">
                             </div>
                             <div class="single-user-chat-name">
                                 <div class="title-text-contact">
                                     <span class="name">{{contact.name}}</span>
-                                    <span class="time">{{getLastMessage(contact).date}}</span>
+                                    <span class="time"
+                                        v-if="contact.messages.length > 0">{{contact.messages[contact.messages.length
+                                        -1].date}}</span>
                                 </div>
-                                <div class="mex">{{getLastMessage(contact).message}}</div>
+                                <div class="mex" v-if="contact.messages.length > 0">
+                                    {{contact.messages[contact.messages.length -1].message}}</div>
                             </div>
                         </div>
                     </div>
@@ -87,11 +91,14 @@
                     <div class="d-flex align-items-center bg-lightgrey">
                         <div class="user-image-name">
                             <div class="user-image">
-                                <img :src="'img/avatar' + contacts[currentChat].avatar + '.jpg'" :alt="contacts[currentChat].name">
+                                <img :src="'img/avatar' + contacts[currentChat].avatar + '.jpg'"
+                                    :alt="contacts[currentChat].name">
                             </div>
                             <div class="user-name">
                                 {{contacts[currentChat].name}}
-                                <p>Ultimo accesso {{getLastMessage(contacts[currentChat]).date}}</p>
+                                <p v-if="contacts[currentChat].messages.length > 0">Ultimo accesso
+                                    {{contacts[currentChat].messages[contacts[currentChat].messages.length -1].date}}
+                                </p>
                             </div>
                         </div>
 
@@ -113,40 +120,56 @@
                     <!-- CHAT AREA -->
                     <div class="chat-area">
                         <div class="chat-area-container">
-                            <div class="single-message d-flex justify-content-between" v-for="(message, i) in contacts[currentChat].messages" :key="i" :class="{'sent' : message.status === 'sent', 'received' : message.status === 'received'}">
-                                <p>{{message.message}}</p>
-                                
-                                <div class="d-flex flex-column justify-content-between">
-                                    <div class="d-flex justify-content-center align-items-center p-1 position-relative">
-                                        <i class="fas fa-chevron-down c-pointer arrow" @click="toggleClass(i)"></i>
+                            <div class="single-message shadow d-flex justify-content-between"
+                                v-for="(message, i) in contacts[currentChat].messages" :key="i"
+                                :class="{'sent' : message.status === 'sent', 'received' : message.status === 'received'}"
+                                ref="msg">
+                                <p v-html="message.message"></p>
 
-                                        <div class="drop-menu position-absolute shadow border p-2" :class="{'d-none': !message.options}" @mouseleave="toggleClass(i)">
-                                                        
+                                <div class="d-flex flex-column justify-content-between ">
+                                    <div class="d-flex justify-content-center align-items-center p-1 position-relative">
+
+                                        <i class="fas fa-chevron-down arrow" @click="showOption(i)"></i>
+                                        <div class="drop-menu position-absolute shadow border p-2"
+                                            v-if="msgOpt.i === i && msgOpt.show">
+
                                             <p class="my-0 hover_bg p-1 c-pointer">Message info</p>
-                                            <p class="my-0 hover_bg p-1 c-pointer" @click="deleteMessage(i)">Delete message</p>
+                                            <p class="my-0 hover_bg p-1 c-pointer" @click="deleteMessage(i)">Delete
+                                                message</p>
                                         </div>
                                     </div>
 
                                     <span>{{message.date}}</span>
                                 </div>
                             </div>
-                            
+
                         </div>
                     </div>
 
                     <!-- CHAT INVIO MESSAGGIO -->
-                    <div class="d-flex align-items-center bg-lightgrey p-2">
-                        <div class="message-icon">
-                            <a href="#"><i class="far fa-smile smile"></i></a>
+                    <div class="d-flex align-items-center bg-lightgrey p-2 ">
+                        <div class="message-icon position-relative">
+                            <i class="far fa-smile smile" @click="showEmoji"></i>
+                            <div id="emoji" v-show="showemoji" @mouseleave="showEmoji">
+                                <span v-for="(icon, index) in icons" :key="index" v-html="icon" @click="addEmoji(index)"  class="c-pointer m-1 emojis shadow" ></span>
+
+                            </div>
                         </div>
                         <div class="flex-grow-1">
-                            <input v-model="newMessage" @keyup.enter="messageSent" type="text" placeholder="Scrivi un messaggio" class="message-text">
+                            <input v-model="newMessage" @keyup.enter="messageSent" type="text"
+                                placeholder="Scrivi un messaggio" class="message-text">
                         </div>
                         <div class="message-icon">
                             <a href="#"><i class="fas fa-microphone mic"></i></a>
                         </div>
                         <div class="message-icon pb-1">
-                            <svg @click="messageSent" viewBox="0 0 24 24" height="24" width="24" preserveAspectRatio="xMidYMid meet" class="arrow" version="1.1" x="0px" y="0px" enable-background="new 0 0 24 24" xml:space="preserve"><path fill="currentColor" d="M1.101,21.757L23.8,12.028L1.101,2.3l0.011,7.912l13.623,1.816L1.112,13.845 L1.101,21.757z"></path></svg>
+                            <svg @click="messageSent" viewBox="0 0 24 24" height="24" width="24"
+                                preserveAspectRatio="xMidYMid meet" class="arrow" version="1.1" x="0px" y="0px"
+                                enable-background="new 0 0 24 24" xml:space="preserve">
+                                <path fill="currentColor"
+                                    d="M1.101,21.757L23.8,12.028L1.101,2.3l0.011,7.912l13.623,1.816L1.112,13.845 L1.101,21.757z">
+                                </path>
+                            </svg>
                         </div>
                     </div>
 
@@ -155,7 +178,7 @@
             </div>
 
         </div>
-        
+
     </div>
 
 
