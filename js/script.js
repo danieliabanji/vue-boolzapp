@@ -10,6 +10,7 @@ const app = createApp({
             searchTerm: "",
             showChat: false,
             showemoji: false,
+            showopt: false,
             msgOpt: {
                 i: null,
                 show: false
@@ -60,6 +61,7 @@ const app = createApp({
                 '&#127801;',
                 '&#9749;'
             ],
+            rndAns: [ 'Non posso', 'Chi sei?', 'Sei andato in palestra?', 'Hai comprato il pane?', 'Giochiamo', 'Ok', 'Ok?', 'Va bene', 'Domani non posso', 'Bella!!!'],
             contacts: [
                 {
                     id: 1,
@@ -250,12 +252,15 @@ const app = createApp({
                     }
                 );
                 setTimeout(() => {
+
+                    returnMsg = this.rndAns[Math.floor(Math.random() * this.rndAns.length)];
+
                     const d = new Date();
                     let newdate = d.toLocaleString('it-IT');
                     this.contacts[this.currentChat].messages.push(
                         {
                             date: newdate,
-                            message: 'Ok!',
+                            message: returnMsg,
                             status: 'received',
                         }
                     );
@@ -273,6 +278,15 @@ const app = createApp({
             this.contacts[this.currentChat].messages.splice(i, 1);
             this.showOption(i);
         },
+        deleteMessages(i) {
+            this.contacts[this.currentChat].messages.splice(i);
+            this.showOption(i);
+        },
+        deleteChat(){
+            this.contacts.splice(this.currentChat,1);
+            this.currentChat = 0;
+            this.contacts[this.currentChat].id = this.contacts[0].id;
+        },
         showOption(i) {
             if (i === this.msgOpt.i && this.msgOpt.show) {
                 this.msgOpt.i = null;
@@ -285,6 +299,9 @@ const app = createApp({
         },
         showEmoji() {
             this.showemoji = !this.showemoji;
+        },
+        showOpt() {
+            this.showopt = !this.showopt;
         },
         addEmoji(i) {
             this.newMessage += this.icons[i];

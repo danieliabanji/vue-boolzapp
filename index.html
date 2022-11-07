@@ -105,13 +105,20 @@
                         <div class="user-icon">
                             <ul>
                                 <li>
-                                    <a href="#"><i class="fas fa-circle-notch"></i></a>
+                                    <i class="fas fa-circle-notch"></i>
                                 </li>
                                 <li>
-                                    <a href="#"><i class="fas fa-paperclip"></i></a>
+                                    <i class="fas fa-paperclip"></i>
                                 </li>
-                                <li>
-                                    <a href="#"><i class="fas fa-ellipsis-v"></i></a>
+                                <li class="d-flex justify-content-center align-items-center c-pointer p-1 position-relative">
+                                    <i class="fas fa-ellipsis-v" @click="showOpt"></i>
+                                    <div class="drop-menu position-absolute shadow border p-2"
+                                    v-show="showopt" @mouseleave="showOpt">
+
+                                            <p class="my-0 hover_bg p-1 c-pointer" @click="deleteMessages(i)">Delete Messages</p>
+                                            <p class="my-0 hover_bg p-1 c-pointer" @click="deleteChat(i)">Delete
+                                                Chat</p>
+                                        </div>
                                 </li>
                             </ul>
                         </div>
